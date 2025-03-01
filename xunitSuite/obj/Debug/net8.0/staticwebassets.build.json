@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "sGXajEMurihSRsLzWiqkUt1bl6oDGNnT/n3ftdMqGfs=",
+  "Source": "xunitSuite",
+  "BasePath": "_content/xunitSuite",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
