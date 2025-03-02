@@ -1,7 +1,10 @@
+using xunitSuite.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services to the container
+builder.Services.AddSingleton<IPrinterService, PrinterService>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

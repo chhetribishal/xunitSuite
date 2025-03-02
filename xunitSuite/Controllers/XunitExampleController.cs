@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using xunitSuite.Services;
 
 namespace xunitSuite.Controllers
 {
@@ -7,21 +8,40 @@ namespace xunitSuite.Controllers
     [ApiController]
     public class XunitExampleController : ControllerBase
     {
+        private IPrinterService _printerService;
+        private IEmailService _emailService;
+        public XunitExampleController(IPrinterService printerServices, IEmailService emailService)
+        {
+            _printerService = printerServices;
+            _emailService = emailService;
+        }
+
         [HttpGet("index/{guessedNumber}")]
         public string Index(int guessedNumber)
         {
+            string result;
             if(guessedNumber < 100)
             {
-                return "Wrong! Try a bigger number.";
+                result =  "Wrong! Try a bigger number.";
             }
             else if (guessedNumber >100)
             {
-                return "Wrong! Try a smaller number.";
+                result =  "Wrong! Try a smaller number.";
             }
             else
             {
-                return "You guessed correct number";
+                result =  "You guessed correct number";
             }
+
+            if (_emailService.IsEmailAvailable())
+            {
+                _emailService.SendEmail();
+            }
+            if (_printerService.IsPrinterAvailable())
+            {
+                _printerService.SendPrint("print this message");
+            }
+            return result;
         }
     }
 }
