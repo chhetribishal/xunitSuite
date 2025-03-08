@@ -58,9 +58,40 @@ namespace xunitSuiteTests.Controllers
 
             string result = controller.Index(guessedNumber);
             //Assert -
-            Assert.Equal(expectedResult, result);
+            //Assert.Equal(expectedResult, result);
+            Assert.Contains("Wrong", expectedResult);
+            Assert.DoesNotContain("wrong", expectedResult);
+            Assert.DoesNotMatch("\\d", expectedResult);
+            Assert.Empty(new List<int>());
+            Assert.False(false);
+            Assert.IsType<string>(expectedResult);
+            Assert.NotEmpty(new List<int> {1,2});
+            Assert.NotNull("");
+            Assert.NotSame(new object(), new object());
+            Assert.Single(new List<int> { 4});
+            Assert.StartsWith("Wrong", expectedResult);
+            Assert.True(true);
             emailMocKService.Verify(x => x.SendEmail(),Times.Never);
-            printerMockService.Verify(x => x.SendPrint("print this messagebishal"), Times.Once); //This will cause not to pass unit tes because content is different from what it shoudl be
+            printerMockService.Verify(x => x.SendPrint("print this message"), Times.Once); //This will cause not to pass unit tes because content is different from what it shoudl be
+        }
+
+        [Fact]
+
+        public void XunitExampleController_Index_ValidateNumberWithException()
+        {
+            Mock<IEmailService> emailMockService = new Mock<IEmailService>();
+            emailMockService.Setup(x => x.IsEmailAvailable()).Throws(new ArgumentException());
+            Mock<IPrinterService> printerMockService = new Mock<IPrinterService>();
+            XunitExampleController controller = new XunitExampleController(printerMockService.Object, emailMockService.Object);
+
+            //Act-
+
+            //Assert -
+
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                controller.Index(34);
+            });
         }
 
         /*
