@@ -1,5 +1,6 @@
 ﻿using Moq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,59 @@ namespace xunitSuiteTests.Controllers
             Assert.Equal(expectedResult, result);
             emailMocKService.Verify(x => x.SendEmail(), Times.Once);
         }
+
+        [Theory] // If parameter is expected by method use Theory
+        [InlineData(80, "Wrong! Try a bigger number.")]
+        [InlineData(120, "Wrong! Try a smaller number.")]
+        [InlineData(100, "You guessed correct number.")]
+
+        public void XunitExampleController_Index_ValidNumber(int number, string expectedResult)
+        {
+            ///AAA
+            ///Arrange -
+            //IPrinterService _printerService = new PrinterService();
+            //IEmailService _emailService = new EmailService();
+
+            Mock<IEmailService> emailMocKService = new Mock<IEmailService>();
+            emailMocKService.Setup(x => x.IsEmailAvailable()).Returns(true);
+            emailMocKService.Setup(x => x.SendEmail()).Verifiable();
+            Mock<IPrinterService> printerMockService = new Mock<IPrinterService>();
+            printerMockService.Setup(x => x.IsPrinterAvailable()).Returns(true);
+            XunitExampleController controller = new XunitExampleController(printerMockService.Object, emailMocKService.Object);
+            int guessedNumber = number;
+            //Act -
+
+            string result = controller.Index(guessedNumber);
+            //Assert -
+            Assert.Equal(expectedResult, result);
+            emailMocKService.Verify(x => x.SendEmail(), Times.Once);
+        }
+
+        [Theory]
+        [ClassData(typeof(ValidNumberCollection))]
+        public void XunitExampleController_Index_ValidNumberWithClassData(int number, string expectedResult)
+        {
+            ///AAA
+            ///Arrange -
+            //IPrinterService _printerService = new PrinterService();
+            //IEmailService _emailService = new EmailService();
+
+            Mock<IEmailService> emailMocKService = new Mock<IEmailService>();
+            emailMocKService.Setup(x => x.IsEmailAvailable()).Returns(true);
+            emailMocKService.Setup(x => x.SendEmail()).Verifiable();
+            Mock<IPrinterService> printerMockService = new Mock<IPrinterService>();
+            printerMockService.Setup(x => x.IsPrinterAvailable()).Returns(true);
+            XunitExampleController controller = new XunitExampleController(printerMockService.Object, emailMocKService.Object);
+            int guessedNumber = number;
+            //Act -
+
+            string result = controller.Index(guessedNumber);
+            //Assert -
+            Assert.Equal(expectedResult, result);
+            emailMocKService.Verify(x => x.SendEmail(), Times.Once);
+        }
+
+
         [Fact]
         public void XunitExampleController_Index_ValidLargeNumberWithoutEmailServiceResult()
         {
@@ -131,5 +185,20 @@ namespace xunitSuiteTests.Controllers
             Assert.Equal(expectedResult, result);
         }
         */
+
+        class ValidNumberCollection : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] { 80, "Wrong! Try a bigger number." };
+                yield return new object[] { 120, "Wrong! Try a smaller number." };
+                yield return new object[] { 100, "You guessed correct number." };
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace xunitSuite.Controllers
             }
             else
             {
-                result =  "You guessed correct number";
+                result =  "You guessed correct number.";
             }
 
             if (_emailService.IsEmailAvailable())
